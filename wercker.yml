@@ -26,12 +26,12 @@ build:
       settings: .maven.xml
       cache_repo: true
 
-    - wercker/maven:
-      goals: tycho-versions:update-eclipse-metadata
-      profiles: modules-eclipse
-      maven_opts: -Dtycho.mode=maven
-      cache_repo: true
-      settings: .maven.xml
+#    - wercker/maven:
+#      goals: tycho-versions:update-eclipse-metadata
+#      profiles: modules-eclipse
+#      maven_opts: -Dtycho.mode=maven
+#      cache_repo: true
+#      settings: .maven.xml
 
     - wercker/maven:
       goals: validate
@@ -161,11 +161,11 @@ release:
       settings: .maven.xml
       cache_repo: true
 
-    - wercker/maven:
-      goals: tycho-versions:update-eclipse-metadata
-      maven_opts: -Dtycho.mode=maven
-      cache_repo: true
-      settings: .maven.xml
+#    - wercker/maven:
+#      goals: tycho-versions:update-eclipse-metadata
+#      maven_opts: -Dtycho.mode=maven
+#      cache_repo: true
+#      settings: .maven.xml
 
     - wercker/maven:
       goals: clean deploy
