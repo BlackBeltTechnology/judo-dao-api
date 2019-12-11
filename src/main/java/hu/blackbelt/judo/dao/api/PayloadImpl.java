@@ -1,7 +1,10 @@
 package hu.blackbelt.judo.dao.api;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -14,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static hu.blackbelt.judo.dao.api.Payload.asPayload;
@@ -39,7 +43,7 @@ public class PayloadImpl implements Payload {
     Map<String, Object> internal;
 
     public PayloadImpl(Map<String, Object> map) {
-        this.internal = map.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> {
+        this.internal = new TreeMap(map.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> {
             if (entry.getValue() instanceof List) {
                 return ImmutableList.copyOf((List<Map<String, Object>>) entry.getValue()).stream().map(
                         e -> asPayload(e)).collect(Collectors.toList());
@@ -50,7 +54,7 @@ public class PayloadImpl implements Payload {
                 return asPayload((Map<String, Object>) entry.getValue());
             }
             return entry.getValue();
-        }));
+        })));
     }
 
     @Override
@@ -119,7 +123,15 @@ public class PayloadImpl implements Payload {
 
     @Override
     public boolean equals(Object obj) {
-        return internal.equals(obj);
+        if (!(obj instanceof Map)) {
+            return false;
+        }
+        Map right = (Map) obj;
+
+        if (!(right instanceof TreeMap)) {
+            right = new TreeMap(right);
+        }
+        return internal.equals(right);
     }
 
     @Override
