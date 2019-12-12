@@ -5,6 +5,7 @@ import org.eclipse.emf.ecore.EReference;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface DAO<ID> {
 
@@ -17,6 +18,28 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getAllOf(EClass clazz);
+
+    /**
+     * Get instance of a given mapped transfer object type by the given identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz mapped transfer object type
+     * @param id mapped transfer object
+     * @return return the optional payload
+     */
+    Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
+
+    /**
+     * Get instances of a given mapped transfer object type by the given identifiers.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz mapped transfer object type
+     * @param id mapped transfer object
+     * @return list of instances
+     */
+    List<Payload> getByIdentifiers(EClass clazz, Collection<ID> identifiers);
 
     /**
      * Create a new instance of a given mapped transfer object type.
@@ -232,9 +255,9 @@ public interface DAO<ID> {
      *
      * @param reference transfer object relation
      * @param payload   payload of the instance in which the reference is
-     * @return list of instances that can be used by references
+     * @return list of instances that can be used by references.
      */
-    Payload getRange(EReference reference, Payload payload);
+    List<Payload> getRange(EReference reference, Payload payload);
 
     /**
      * Get template of a given mapped transfer object type.
