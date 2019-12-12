@@ -123,4 +123,5 @@ public interface Payload extends Map<String, Object> {
 
     Collection<Payload> getAsCollectionPayload(String name);
 
+    <T> T getAs(Class<T> type, String name);
 }

@@ -160,5 +160,16 @@ public class PayloadImpl implements Payload {
             throw new IllegalArgumentException("The payload element in the given key: " + name + " is not a Collection. ");
         }
     }
+
+    @Override
+    public <T> T getAs(Class<T> type, String name) {
+        if (!containsKey(name) || get(name) == null) {
+            return null;
+        } else if (type.isAssignableFrom(get(name).getClass())) {
+            return (T) get(name);
+        } else {
+            throw new IllegalArgumentException("The payload element in the given key: " + name + " is not a " + type.getName() +  ". ");
+        }
+    }
 }
 
