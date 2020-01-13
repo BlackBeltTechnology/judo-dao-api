@@ -24,7 +24,7 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
-     * @param clazz mapped transfer object type
+     * @param clazz      mapped transfer object type
      * @param identifier mapped transfer object
      * @return return the optional payload
      */
@@ -35,7 +35,7 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
-     * @param clazz mapped transfer object type
+     * @param clazz       mapped transfer object type
      * @param identifiers mapped transfer object
      * @return list of instances
      */
@@ -300,13 +300,27 @@ public interface DAO<ID> {
     /**
      * Get range of a given transfer object relation.
      * <p>
-     * This operation can be used by unbound operations (TransferObjectRelation#getRange).
+     * This operation can be used by exposed graphs (ExposedGraph#removeAll).
      *
-     * @param reference transfer object relation
-     * @param payload   payload of the instance in which the reference is
+     * @param reference      transfer object relation
+     * @param referenceToSet transfer object relation to set (that the range is returned for)
+     * @param payload        payload of the instance in which the reference is
      * @return list of instances that can be used by references.
      */
-    List<Payload> getRange(EReference reference, Payload payload);
+    List<Payload> getRangeOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+
+    /**
+     * Get range of a given transfer object relation.
+     * <p>
+     * This operation can be used by unbound operations (TransferObjectRelation#getRange).
+     *
+     * @param id             mapped transfer object ID in which the instance to update can be found
+     * @param reference      transfer object relation that the instance to edit is linked in (pre condition)
+     * @param referenceToSet reference to set (that the range is returned for)
+     * @param payload        payload of the instance in which the reference is
+     * @return list of instances that can be used by references.
+     */
+    List<Payload> getRangeOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
 
     /**
      * Get template of a given mapped transfer object type.
