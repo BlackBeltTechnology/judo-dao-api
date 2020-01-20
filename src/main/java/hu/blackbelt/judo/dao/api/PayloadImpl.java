@@ -14,17 +14,19 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static hu.blackbelt.judo.dao.api.Payload.asPayload;
 
 public class PayloadImpl implements Payload {
 
-    public static final Gson GSON = new GsonBuilder()
+    public static final Gson GSON = new GsonBuilder().serializeNulls()
             .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>() {
                 @Override
                 public void write(JsonWriter out, ZonedDateTime value) throws IOException {
@@ -43,18 +45,21 @@ public class PayloadImpl implements Payload {
     Map<String, Object> internal;
 
     public PayloadImpl(Map<String, Object> map) {
-        this.internal = new TreeMap(map.entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey(), entry -> {
-            if (entry.getValue() instanceof List) {
-                return ImmutableList.copyOf((List<Map<String, Object>>) entry.getValue()).stream().map(
-                        e -> asPayload(e)).collect(Collectors.toList());
-            } else if (entry.getValue() instanceof Collection) {
-                return ImmutableSet.copyOf((Collection<Map<String, Object>>) entry.getValue()).stream().map(
-                        e -> asPayload(e)).collect(Collectors.toSet());
-            } else if (entry.getValue() instanceof Map) {
-                return asPayload((Map<String, Object>) entry.getValue());
+        this.internal = new TreeMap<>();
+        for (String key : new TreeSet<String>(map.keySet())) {
+            Object value = map.get(key);
+            if (value instanceof List) {
+                this.internal.put(key, ImmutableList.copyOf((List<Map<String, Object>>) value).stream().map(
+                        e -> asPayload(e)).collect(Collectors.toList()));
+            } else if (value instanceof Collection) {
+                this.internal.put(key, ImmutableSet.copyOf((Collection<Map<String, Object>>) value).stream().map(
+                        e -> asPayload(e)).collect(Collectors.toSet()));
+            } else if (value instanceof Map) {
+                this.internal.put(key, asPayload((Map<String, Object>) value));
+            } else {
+                this.internal.put(key, value);
             }
-            return entry.getValue();
-        })));
+        }
     }
 
     @Override
