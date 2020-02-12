@@ -158,10 +158,11 @@ public interface DAO<ID> {
      *
      * @param reference      static navigation
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void setReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+    void setReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Unset reference in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -170,10 +171,10 @@ public interface DAO<ID> {
      *
      * @param reference      static navigation
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
      * @return updated references in the given instance
      */
-    void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+    void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId);
 
     /**
      * Add all references in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -182,10 +183,11 @@ public interface DAO<ID> {
      *
      * @param reference      static navigation
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+    void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Remove all references in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -194,10 +196,11 @@ public interface DAO<ID> {
      *
      * @param reference      static navigation
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+    void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Get all instances of a given reference from a given mapped transfer object.
@@ -253,10 +256,11 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void setReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void setReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Unset reference in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -266,10 +270,10 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
      * @return updated references in the given instance
      */
-    void unsetReferenceOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void unsetReferenceOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId);
 
     /**
      * Add all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -279,10 +283,11 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void addAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void addAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Remove all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -292,10 +297,11 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Get range of a given transfer object relation.
