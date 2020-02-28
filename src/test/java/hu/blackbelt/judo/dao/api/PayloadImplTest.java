@@ -47,4 +47,13 @@ class PayloadImplTest {
 
     }
 
+    @Test
+    public void testPayloadStatic() {
+        Payload payload = Payload.map("k1", null, "k2", "string");
+        assertThat(payload, isA(Payload.class));
+        assertThat(payload.getAs(String.class, "k1"), equalTo(null));
+        assertThat(payload.getAs(String.class, "k2"), equalTo("string"));
+    }
+
+
 }

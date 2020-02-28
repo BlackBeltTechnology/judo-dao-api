@@ -49,10 +49,10 @@ public class PayloadImpl implements Payload {
         for (String key : new TreeSet<String>(map.keySet())) {
             Object value = map.get(key);
             if (value instanceof List) {
-                this.internal.put(key, ImmutableList.copyOf((List<Map<String, Object>>) value).stream().map(
+                this.internal.put(key, ((List<Map<String, Object>>) value).stream().map(
                         e -> asPayload(e)).collect(Collectors.toList()));
             } else if (value instanceof Collection) {
-                this.internal.put(key, ImmutableSet.copyOf((Collection<Map<String, Object>>) value).stream().map(
+                this.internal.put(key, ((Collection<Map<String, Object>>) value).stream().map(
                         e -> asPayload(e)).collect(Collectors.toSet()));
             } else if (value instanceof Map) {
                 this.internal.put(key, asPayload((Map<String, Object>) value));
