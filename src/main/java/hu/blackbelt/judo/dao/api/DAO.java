@@ -5,6 +5,7 @@ import org.eclipse.emf.ecore.EReference;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface DAO<ID> {
 
@@ -17,6 +18,28 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getAllOf(EClass clazz);
+
+    /**
+     * Get instance of a given mapped transfer object type by the given identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz      mapped transfer object type
+     * @param identifier mapped transfer object
+     * @return return the optional payload
+     */
+    Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
+
+    /**
+     * Get instances of a given mapped transfer object type by the given identifiers.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz       mapped transfer object type
+     * @param identifiers mapped transfer object
+     * @return list of instances
+     */
+    List<Payload> getByIdentifiers(EClass clazz, Collection<ID> identifiers);
 
     /**
      * Create a new instance of a given mapped transfer object type.
@@ -124,9 +147,60 @@ public interface DAO<ID> {
      *
      * @param clazz     mapped transfer object type
      * @param reference static navigation
-     * @param id        instance ID to delete
+     * @param payload   instance to delete
      */
-    void deleteReferencedInstancesOf(EClass clazz, EReference reference, ID id);
+    void deleteReferencedInstancesOf(EClass clazz, EReference reference, Payload payload);
+
+    /**
+     * Set reference in a mapped transfer object of a given reference of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#set).
+     *
+     * @param reference      static navigation
+     * @param referenceToSet transfer object relation to set
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
+     * @return updated references in the given instance
+     */
+    void setReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+
+    /**
+     * Unset reference in a mapped transfer object of a given reference of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#unset).
+     *
+     * @param reference      static navigation
+     * @param referenceToSet transfer object relation to set
+     * @param instanceId     instance to update
+     * @return updated references in the given instance
+     */
+    void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId);
+
+    /**
+     * Add all references in a mapped transfer object of a given reference of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#addAll).
+     *
+     * @param reference      static navigation
+     * @param referenceToSet transfer object relation to set
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
+     * @return updated references in the given instance
+     */
+    void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+
+    /**
+     * Remove all references in a mapped transfer object of a given reference of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#removeAll).
+     *
+     * @param reference      static navigation
+     * @param referenceToSet transfer object relation to set
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
+     * @return updated references in the given instance
+     */
+    void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Get all instances of a given reference from a given mapped transfer object.
@@ -182,10 +256,11 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void setReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void setReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Unset reference in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -195,9 +270,10 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
+     * @param instanceId     instance to update
      * @return updated references in the given instance
      */
-    void unsetReferenceOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet);
+    void unsetReferenceOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId);
 
     /**
      * Add all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -207,10 +283,11 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void addAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void addAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
      * Remove all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -220,21 +297,36 @@ public interface DAO<ID> {
      * @param id             mapped transfer object ID in which the instance to update can be found
      * @param reference      transfer object relation that the instance to update is linked in (pre condition)
      * @param referenceToSet transfer object relation to set
-     * @param payload        instance to update (containing IDs of referenceToSet only)
+     * @param instanceId     instance to update
+     * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+    void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+
+    /**
+     * Get range of a given transfer object relation.
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#removeAll).
+     *
+     * @param reference      transfer object relation
+     * @param referenceToSet transfer object relation to set (that the range is returned for)
+     * @param payload        payload of the instance in which the reference is
+     * @return list of instances that can be used by references.
+     */
+    List<Payload> getRangeOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
 
     /**
      * Get range of a given transfer object relation.
      * <p>
      * This operation can be used by unbound operations (TransferObjectRelation#getRange).
      *
-     * @param reference transfer object relation
-     * @param payload   payload of the instance in which the reference is
-     * @return list of instances that can be used by references
+     * @param id             mapped transfer object ID in which the instance to update can be found
+     * @param reference      transfer object relation that the instance to edit is linked in (pre condition)
+     * @param referenceToSet reference to set (that the range is returned for)
+     * @param payload        payload of the instance in which the reference is
+     * @return list of instances that can be used by references.
      */
-    Payload getRange(EReference reference, Payload payload);
+    List<Payload> getRangeOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
 
     /**
      * Get template of a given mapped transfer object type.

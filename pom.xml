@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.blackbelt.judo</groupId>
     <artifactId>judo-dao-api</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>bundle</packaging>
 
     <name>Judo DAO API</name>
@@ -345,7 +345,7 @@
                     <obrRepository>NONE</obrRepository>
                     <instructions>
                         <Export-Package>
-                            hu.blackbelt.judo.tatami.core.*;version=${project.version}
+                            hu.blackbelt.judo.dao.api*;version=${project.version}
                         </Export-Package>
 
                         <Import-Package>
@@ -481,6 +481,7 @@
                             <tag>${project.version}</tag>
                             <deleteRelease>true</deleteRelease>
                             <commitish>${env.WERCKER_GIT_COMMIT}</commitish>
+                            <!--
                             <fileSets>
                                 <fileSet>
                                     <directory>${basedir}</directory>
@@ -488,7 +489,7 @@
                                         <include>**/target/*.jar</include>
                                     </includes>
                                 </fileSet>
-                            </fileSets>
+                            </fileSets> -->
                         </configuration>
                         <executions>
                             <execution>
