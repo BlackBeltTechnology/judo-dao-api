@@ -20,6 +20,17 @@ public interface DAO<ID> {
     List<Payload> getAllOf(EClass clazz);
 
     /**
+     * Search instances of a given mapped transfer object type.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz mapped transfer object type
+     * @param filter filter expression
+     * @returnlist of instances
+     */
+    List<Payload> search(EClass clazz, String filter);
+
+    /**
      * Get instance of a given mapped transfer object type by the given identifier.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
@@ -129,6 +140,18 @@ public interface DAO<ID> {
     List<Payload> getAllReferencedInstancesOf(EReference reference, EClass clazz);
 
     /**
+     * Search mapped transfer objects of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#get).
+     *
+     * @param reference static navigation
+     * @param clazz     mapped transfer object type
+     * @oaram filter    filter expression
+     * @return all instances that are matching a static navigation
+     */
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter);
+
+    /**
      * Update a mapped transfer object of a given reference (static navigation).
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#update).
@@ -212,6 +235,18 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getNavigationResultAt(ID id, EReference reference);
+
+    /**
+     * Search instances of a given reference from a given mapped transfer object.
+     * <p>
+     * This operation can be used by bound operations (TransferObjectRelation#get).
+     *
+     * @param id        ID of source mapped transfer object
+     * @param reference transfer object reference
+     * @param filter    filter expression
+     * @return list of instances
+     */
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
