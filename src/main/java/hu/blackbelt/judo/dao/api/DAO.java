@@ -337,39 +337,4 @@ public interface DAO<ID> {
      * @return updated references in the given instance
      */
     void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
-
-    /**
-     * Get range of a given transfer object relation.
-     * <p>
-     * This operation can be used by exposed graphs (ExposedGraph#removeAll).
-     *
-     * @param reference      transfer object relation
-     * @param referenceToSet transfer object relation to set (that the range is returned for)
-     * @param payload        payload of the instance in which the reference is
-     * @return list of instances that can be used by references.
-     */
-    List<Payload> getRangeOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
-
-    /**
-     * Get range of a given transfer object relation.
-     * <p>
-     * This operation can be used by unbound operations (TransferObjectRelation#getRange).
-     *
-     * @param id             mapped transfer object ID in which the instance to update can be found
-     * @param reference      transfer object relation that the instance to edit is linked in (pre condition)
-     * @param referenceToSet reference to set (that the range is returned for)
-     * @param payload        payload of the instance in which the reference is
-     * @return list of instances that can be used by references.
-     */
-    List<Payload> getRangeOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
-
-    /**
-     * Get template of a given mapped transfer object type.
-     * <p>
-     * This operation can be used by unbound operations (TransferObjectType#getTemplate).
-     *
-     * @param clazz mapped transfer object type
-     * @return template containing default values
-     */
-    Payload getTemplate(EClass clazz);
 }
