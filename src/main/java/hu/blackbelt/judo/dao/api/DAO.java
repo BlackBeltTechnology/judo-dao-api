@@ -1,5 +1,9 @@
 package hu.blackbelt.judo.dao.api;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
@@ -24,11 +28,12 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
-     * @param clazz mapped transfer object type
-     * @param filter filter expression
+     * @param clazz       mapped transfer object type
+     * @param filter      filter expression
+     * @param orderByList order by clauses
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, String filter);
+    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -144,12 +149,13 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#get).
      *
-     * @param reference static navigation
-     * @param clazz     mapped transfer object type
-     * @oaram filter    filter expression
+     * @param reference   static navigation
+     * @param clazz       mapped transfer object type
+     * @param orderByList order by clauses
      * @return all instances that are matching a static navigation
+     * @oaram filter    filter expression
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -241,12 +247,13 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#get).
      *
-     * @param id        ID of source mapped transfer object
-     * @param reference transfer object reference
-     * @param filter    filter expression
+     * @param id          ID of source mapped transfer object
+     * @param reference   transfer object reference
+     * @param filter      filter expression
+     * @param orderByList order by clauses
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
@@ -337,4 +344,14 @@ public interface DAO<ID> {
      * @return updated references in the given instance
      */
     void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+
+    @Getter
+    @Builder
+    class OrderBy {
+
+        @NonNull
+        private EAttribute attribute;
+
+        private boolean descending;
+    }
 }
