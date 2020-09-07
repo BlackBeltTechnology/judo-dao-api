@@ -14,6 +14,22 @@ import java.util.Optional;
 public interface DAO<ID> {
 
     /**
+     * Load static features (attributes and embedded relations) of an unmapped transfer object type.
+     *
+     * @param clazz unmapped transfer object type
+     * @return payload of loaded static data
+     */
+    Payload getStaticFeatures(EClass clazz);
+
+    /**
+     * Get static data defined as derived expression.
+     *
+     * @param attribute transfer attribute
+     * @return value of static data
+     */
+    Payload getStaticData(EAttribute attribute);
+
+    /**
      * Get all instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
