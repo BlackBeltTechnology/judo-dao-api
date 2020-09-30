@@ -56,4 +56,13 @@ class PayloadImplTest {
     }
 
 
+    @Test
+    public void testEquls() {
+        Payload payload = Payload.map("k1", null, "k2", "string");
+        assertThat(Payload.map("k2", "string", "k1", null), equalTo(Payload.map("k1", null, "k2", "string")));
+        assertThat(Payload.map("k2", "string", "k1", null, "__$created", true), equalTo(Payload.map("k1", null, "k2", "string")));
+
+    }
+
+
 }

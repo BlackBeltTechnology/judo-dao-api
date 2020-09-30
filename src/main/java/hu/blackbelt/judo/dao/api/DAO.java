@@ -86,19 +86,6 @@ public interface DAO<ID> {
     Payload create(EClass clazz, Payload payload);
 
     /**
-     * Create a new instance of a given mapped transfer object type.
-     * <p>
-     * This operation can be used by JCL (create), exposed graphs (ExposedGraph#create) and custom Java sources. Mapped
-     * transfer object must have a filter to restrict which kind of instances can be created by exposed services.
-     *
-     * @param clazz   mapped transfer object type
-     * @param payload instance to create
-     * @param newIds  output parameter that new IDs will be added to
-     * @return created instance
-     */
-    Payload create(EClass clazz, Payload payload, Collection<ID> newIds);
-
-    /**
      * Update a mapped transfer object.
      * <p>
      * This operation can be used by JCL (update) and custom Java sources.
@@ -108,18 +95,6 @@ public interface DAO<ID> {
      * @return updated instance
      */
     Payload update(EClass clazz, Payload payload);
-
-    /**
-     * Update a mapped transfer object.
-     * <p>
-     * This operation can be used by JCL (update) and custom Java sources.
-     *
-     * @param clazz   mapped transfer object type
-     * @param payload instance to update
-     * @param newIds  output parameter that new IDs will be added to
-     * @return updated instance
-     */
-    Payload update(EClass clazz, Payload payload, Collection<ID> newIds);
 
     /**
      * Delete a mapped transfer object.
@@ -209,19 +184,6 @@ public interface DAO<ID> {
      * @return updated instance
      */
     Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload);
-
-    /**
-     * Update a mapped transfer object of a given reference (static navigation).
-     * <p>
-     * This operation can be used by exposed graphs (ExposedGraph#update).
-     *
-     * @param clazz     mapped transfer object type
-     * @param reference static navigation
-     * @param payload   instance to update
-     * @param newIds  output parameter that new IDs will be added to
-     * @return updated instance
-     */
-    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, Collection<ID> newIds);
 
     /**
      * Delete a mapped transfer object of a given reference (static navigation).
@@ -322,19 +284,6 @@ public interface DAO<ID> {
     Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload);
 
     /**
-     * Create a mapped transfer object of a given reference from a given mapped transfer object.
-     * <p>
-     * This operation can be used by bound operations (TransferObjectRelation#create).
-     *
-     * @param id        mapped transfer object ID in which the new instance will be created
-     * @param reference transfer object relation that the new instance will be linked to
-     * @param payload   instance to create
-     * @param newIds  output parameter that new IDs will be added to
-     * @return created instance
-     */
-    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload, Collection<ID> newIds);
-
-    /**
      * Update a mapped transfer object of a given reference from a given mapped transfer object.
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#update).
@@ -345,19 +294,6 @@ public interface DAO<ID> {
      * @return updated instance
      */
     Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload);
-
-    /**
-     * Update a mapped transfer object of a given reference from a given mapped transfer object.
-     * <p>
-     * This operation can be used by bound operations (TransferObjectRelation#update).
-     *
-     * @param id        mapped transfer object ID in which the instance to update can be found
-     * @param reference transfer object relation that the instance to update is linked in (pre condition)
-     * @param payload   instance to update
-     * @param newIds  output parameter that new IDs will be added to
-     * @return updated instance
-     */
-    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload, Collection<ID> newIds);
 
     /**
      * Delete a mapped transfer object of a given reference from a given mapped transfer object.

@@ -1,10 +1,5 @@
 package hu.blackbelt.judo.dao.api;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -14,7 +9,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +35,7 @@ public class PayloadImpl implements Payload {
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .create();
+    public static final String TRANSIENT_PREFIX = "__$";
 
     Map<String, Object> internal;
 
@@ -131,12 +126,21 @@ public class PayloadImpl implements Payload {
         if (!(obj instanceof Map)) {
             return false;
         }
-        Map right = (Map) obj;
+        Map right = new TreeMap((Map) obj);
+        Map left = new TreeMap(internal);
 
-        if (!(right instanceof TreeMap)) {
-            right = new TreeMap(right);
-        }
-        return internal.equals(right);
+        // Remove hidden fields
+        ((Set) right.keySet().stream()
+                .filter(k -> k.toString().startsWith(TRANSIENT_PREFIX))
+                .collect(Collectors.toSet()))
+                .forEach(k -> right.remove(k));
+
+        ((Set) left.keySet().stream()
+                .filter(k -> k.toString().startsWith(TRANSIENT_PREFIX))
+                .collect(Collectors.toSet()))
+                .forEach(k -> left.remove(k));
+
+        return left.equals(right);
     }
 
     @Override
