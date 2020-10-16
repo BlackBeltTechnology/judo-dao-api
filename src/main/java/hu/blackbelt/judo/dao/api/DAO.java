@@ -47,9 +47,11 @@ public interface DAO<ID> {
      * @param clazz       mapped transfer object type
      * @param filter      filter expression
      * @param orderByList order by clauses
+     * @param limit       maximum number of items returned by the operation
+     * @param lastItem    last item returned by previous call
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList);
+    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList, Integer limit, Payload lastItem);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -168,10 +170,12 @@ public interface DAO<ID> {
      * @param reference   static navigation
      * @param clazz       mapped transfer object type
      * @param orderByList order by clauses
-     * @return all instances that are matching a static navigation
      * @oaram filter    filter expression
+     * @param limit       maximum number of items returned by the operation
+     * @param lastItem    last item returned by previous call
+     * @return all instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList, Integer limit, Payload lastItem);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -267,9 +271,11 @@ public interface DAO<ID> {
      * @param reference   transfer object reference
      * @param filter      filter expression
      * @param orderByList order by clauses
+     * @param limit       maximum number of items returned by the operation
+     * @param lastItem    last item returned by previous call
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList, Integer limit, Payload lastItem);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
