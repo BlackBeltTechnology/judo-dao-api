@@ -47,9 +47,10 @@ public interface DAO<ID> {
      * @param clazz       mapped transfer object type
      * @param filter      filter expression
      * @param orderByList order by clauses
+     * @param seek        seek parameters (limit, last item, reverse pagination)
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList);
+    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList, Seek seek);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -168,10 +169,11 @@ public interface DAO<ID> {
      * @param reference   static navigation
      * @param clazz       mapped transfer object type
      * @param orderByList order by clauses
-     * @return all instances that are matching a static navigation
      * @oaram filter    filter expression
+     * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @return all instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList, Seek seek);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -267,9 +269,10 @@ public interface DAO<ID> {
      * @param reference   transfer object reference
      * @param filter      filter expression
      * @param orderByList order by clauses
+     * @param seek        seek parameters (limit, last item, reverse pagination)
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList, Seek seek);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
@@ -369,5 +372,16 @@ public interface DAO<ID> {
         private EAttribute attribute;
 
         private boolean descending;
+    }
+
+    @Getter
+    @Builder
+    class Seek {
+
+        private int limit;
+
+        private boolean reverse;
+
+        private Payload lastItem;
     }
 }
