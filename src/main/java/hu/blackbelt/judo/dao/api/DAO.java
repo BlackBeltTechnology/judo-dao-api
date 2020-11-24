@@ -64,6 +64,17 @@ public interface DAO<ID> {
     Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
 
     /**
+     * Get (entity) metadata of a given mapped transfer object type by identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz      mapped transfer object type
+     * @param identifier mapped transfer object
+     * @return payload containing metadata (including entity type, version, etc.)
+     */
+    Optional<Payload> getMetadata(EClass clazz, ID identifier);
+
+    /**
      * Get instances of a given mapped transfer object type by the given identifiers.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
