@@ -30,6 +30,14 @@ public interface DAO<ID> {
     Payload getStaticData(EAttribute attribute);
 
     /**
+     * Get default values of a given transfer object type.
+     *
+     * @param clazz transfer object type
+     * @return payload of default values
+     */
+    Payload getDefaultsOf(EClass clazz);
+
+    /**
      * Get all instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
