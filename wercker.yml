@@ -60,7 +60,7 @@ build:
     - github-create-release:
       token: $GITHUB_ACCESS_TOKEN
       tag: $VERSION_NUMBER
-      title: $GITHUB_RELEASE_TITLE
+#      title: $GITHUB_RELEASE_TITLE
 #      body: $GITHUB_RELEASE_BODY
       prerepease: true
       
