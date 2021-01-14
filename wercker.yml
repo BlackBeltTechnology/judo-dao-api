@@ -50,16 +50,18 @@ build:
       cache_repo: true
 
     - script:
-      name: get release notes
+      name: get github release attributes
       code: |-
-        export RELEASE_NOTES=$(cat ./target/classes/.releasetemplate)
-        echo "Release notes: $RELEASE_NOTES"
+        export GITHUB_RELEASE_BODY=$(cat ./target/classes/.releasetemplate | jq -aRs .)
+        export GITHUB_RELEASE_TITLE=$(echo "$VERSION_NUMBER" | jq -aRs .)
+        echo "Release title: $GITHUB_RELEASE_TITLE"
+        echo "Release notes: $GITHUB_RELEASE_BODY"
 
     - github-create-release:
       token: $GITHUB_ACCESS_TOKEN
       tag: $VERSION_NUMBER
-      title: $VERSION_NUMBER
-      body: $RELEASE_NOTES
+      title: $GITHUB_RELEASE_TITLE
+      body: $GITHUB_RELEASE_BODY
       prerepease: true
       
 #  after-steps:
