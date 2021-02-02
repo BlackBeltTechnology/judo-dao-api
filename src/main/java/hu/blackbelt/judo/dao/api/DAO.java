@@ -38,6 +38,18 @@ public interface DAO<ID> {
     Payload getDefaultsOf(EClass clazz);
 
     /**
+     * Get range of a given transfer object relation.
+     *
+     * @param reference transfer objet relation
+     * @param payload   owner data of relation
+     * @param filter      filter expression
+     * @param orderByList order by clauses
+     * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @return list of possible item(s)
+     */
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, String filter, List<OrderBy> orderByList, Seek seek);
+
+    /**
      * Get all instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
