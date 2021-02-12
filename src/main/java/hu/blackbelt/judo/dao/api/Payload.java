@@ -10,7 +10,7 @@ import java.util.Map;
 public interface Payload extends Map<String, Object> {
 
     static Payload asPayload(Map<String, Object> objectMap) {
-        return new PayloadImpl(objectMap);
+        return objectMap != null ? new PayloadImpl(objectMap) : null;
     }
 
     static Payload empty() {
