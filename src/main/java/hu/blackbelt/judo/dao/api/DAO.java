@@ -40,14 +40,15 @@ public interface DAO<ID> {
     /**
      * Get range of a given transfer object relation.
      *
-     * @param reference transfer objet relation
-     * @param payload   owner data of relation
-     * @param filter      filter expression
-     * @param orderByList order by clauses
-     * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @param reference       transfer objet relation
+     * @param payload         owner data of relation
+     * @param filter          filter expression
+     * @param orderByList     order by clauses
+     * @param seek            seek parameters (limit, last item, reverse pagination)
+     * @param withoutFeatures load range without features (i.e. for validating requests)
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, String filter, List<OrderBy> orderByList, Seek seek);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
 
     /**
      * Get all instances of a given mapped transfer object type.
@@ -68,9 +69,10 @@ public interface DAO<ID> {
      * @param filter      filter expression
      * @param orderByList order by clauses
      * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @param withoutFeatures load data without features (i.e. for validating requests)
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList, Seek seek);
+    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -197,14 +199,15 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#get).
      *
-     * @param reference   static navigation
-     * @param clazz       mapped transfer object type
-     * @param orderByList order by clauses
-     * @oaram filter    filter expression
-     * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @param reference       static navigation
+     * @param clazz           mapped transfer object type
+     * @param orderByList     order by clauses
+     * @oaram filter          filter expression
+     * @param seek            seek parameters (limit, last item, reverse pagination)
+     * @param withoutFeatures load data without features (i.e. for validating requests)
      * @return all instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList, Seek seek);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -296,14 +299,15 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#get).
      *
-     * @param id          ID of source mapped transfer object
-     * @param reference   transfer object reference
-     * @param filter      filter expression
-     * @param orderByList order by clauses
-     * @param seek        seek parameters (limit, last item, reverse pagination)
+     * @param id              ID of source mapped transfer object
+     * @param reference       transfer object reference
+     * @param filter          filter expression
+     * @param orderByList     order by clauses
+     * @param seek            seek parameters (limit, last item, reverse pagination)
+     * @param withoutFeatures load data without features (i.e. for validating requests)
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList, Seek seek);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
