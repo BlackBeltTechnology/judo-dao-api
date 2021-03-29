@@ -3,12 +3,14 @@ package hu.blackbelt.judo.dao.api;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Singular;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface DAO<ID> {
@@ -42,13 +44,10 @@ public interface DAO<ID> {
      *
      * @param reference       transfer objet relation
      * @param payload         owner data of relation
-     * @param filter          filter expression
-     * @param orderByList     order by clauses
-     * @param seek            seek parameters (limit, last item, reverse pagination)
-     * @param withoutFeatures load range without features (i.e. for validating requests)
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer queryCustomizer);
 
     /**
      * Get all instances of a given mapped transfer object type.
@@ -66,13 +65,10 @@ public interface DAO<ID> {
      * This operation can be used by JCL (expression) and custom Java sources.
      *
      * @param clazz       mapped transfer object type
-     * @param filter      filter expression
-     * @param orderByList order by clauses
-     * @param seek        seek parameters (limit, last item, reverse pagination)
-     * @param withoutFeatures load data without features (i.e. for validating requests)
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
+    List<Payload> search(EClass clazz, QueryCustomizer queryCustomizer);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -201,13 +197,10 @@ public interface DAO<ID> {
      *
      * @param reference       static navigation
      * @param clazz           mapped transfer object type
-     * @param orderByList     order by clauses
-     * @oaram filter          filter expression
-     * @param seek            seek parameters (limit, last item, reverse pagination)
-     * @param withoutFeatures load data without features (i.e. for validating requests)
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return all instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -301,13 +294,10 @@ public interface DAO<ID> {
      *
      * @param id              ID of source mapped transfer object
      * @param reference       transfer object reference
-     * @param filter          filter expression
-     * @param orderByList     order by clauses
-     * @param seek            seek parameters (limit, last item, reverse pagination)
-     * @param withoutFeatures load data without features (i.e. for validating requests)
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, String filter, List<OrderBy> orderByList, Seek seek, boolean withoutFeatures);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer queryCustomizer);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
@@ -418,5 +408,21 @@ public interface DAO<ID> {
         private boolean reverse;
 
         private Payload lastItem;
+    }
+
+    @Getter
+    @Builder
+    class QueryCustomizer {
+
+        private String filter;
+
+        @Singular("orderBy")
+        private List<OrderBy> orderByList;
+
+        private Seek seek;
+
+        private boolean withoutFeatures;
+
+        private Map<String, Object> mask;
     }
 }
