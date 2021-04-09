@@ -64,7 +64,7 @@ public interface DAO<ID> {
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
-     * @param clazz       mapped transfer object type
+     * @param clazz           mapped transfer object type
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @returnlist of instances
      */
@@ -80,6 +80,18 @@ public interface DAO<ID> {
      * @return return the optional payload
      */
     Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
+
+    /**
+     * Get instance of a given mapped transfer object type by the given identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param identifier      mapped transfer object
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return return the optional payload
+     */
+    Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer queryCustomizer);
 
     /**
      * Get (entity) metadata of a given mapped transfer object type by identifier.
@@ -102,6 +114,18 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getByIdentifiers(EClass clazz, Collection<ID> identifiers);
+
+    /**
+     * Get instances of a given mapped transfer object type by the given identifiers.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param identifiers     mapped transfer object
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return list of instances
+     */
+    List<Payload> searchByIdentifiers(EClass clazz, Collection<ID> identifiers, QueryCustomizer queryCustomizer);
 
     /**
      * Create a new instance of a given mapped transfer object type.
