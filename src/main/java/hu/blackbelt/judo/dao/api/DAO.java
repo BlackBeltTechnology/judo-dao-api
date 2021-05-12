@@ -448,5 +448,7 @@ public interface DAO<ID> {
         private boolean withoutFeatures;
 
         private Map<String, Object> mask;
+
+        private Map<String, Object> parameters;
     }
 }
