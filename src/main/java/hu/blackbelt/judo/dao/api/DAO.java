@@ -15,8 +15,6 @@ import java.util.Optional;
 
 public interface DAO<ID> {
 
-    String PARAMETERS_KEY = "__parameters";
-
     /**
      * Load static features (attributes and embedded relations) of an unmapped transfer object type.
      *
