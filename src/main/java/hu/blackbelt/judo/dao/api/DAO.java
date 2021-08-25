@@ -47,7 +47,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer queryCustomizer);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Get all instances of a given mapped transfer object type.
@@ -68,7 +68,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @returnlist of instances
      */
-    List<Payload> search(EClass clazz, QueryCustomizer queryCustomizer);
+    List<Payload> search(EClass clazz, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -91,7 +91,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return return the optional payload
      */
-    Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer queryCustomizer);
+    Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Get (entity) metadata of a given mapped transfer object type by identifier.
@@ -125,7 +125,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> searchByIdentifiers(EClass clazz, Collection<ID> identifiers, QueryCustomizer queryCustomizer);
+    List<Payload> searchByIdentifiers(EClass clazz, Collection<ID> identifiers, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Create a new instance of a given mapped transfer object type.
@@ -138,7 +138,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload create(EClass clazz, Payload payload, QueryCustomizer queryCustomizer);
+    Payload create(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object.
@@ -150,7 +150,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload update(EClass clazz, Payload payload, QueryCustomizer queryCustomizer);
+    Payload update(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object.
@@ -226,7 +226,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return all instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer queryCustomizer);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -239,7 +239,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
+    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference (static navigation).
@@ -324,7 +324,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer queryCustomizer);
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
@@ -337,7 +337,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
+    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference from a given mapped transfer object.
@@ -350,7 +350,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
+    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference from a given mapped transfer object.
@@ -441,7 +441,7 @@ public interface DAO<ID> {
 
     @Getter
     @Builder
-    class QueryCustomizer {
+    class QueryCustomizer<ID> {
 
         private String filter;
 
@@ -455,5 +455,7 @@ public interface DAO<ID> {
         private Map<String, Object> mask;
 
         private Map<String, Object> parameters;
+
+        private Collection<ID> instanceIds;
     }
 }
