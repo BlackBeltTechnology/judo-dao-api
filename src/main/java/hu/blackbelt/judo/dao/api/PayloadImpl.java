@@ -40,8 +40,13 @@ public class PayloadImpl implements Payload {
     Map<String, Object> internal;
 
     public PayloadImpl(Map<String, Object> map) {
+        for (String key : map.keySet()) {
+            if (key == null) {
+                throw new IllegalArgumentException("Payload contains null key(s)");
+            }
+        }
         this.internal = new TreeMap<>();
-        for (String key : new TreeSet<String>(map.keySet())) {
+        for (String key : new TreeSet<>(map.keySet())) {
             Object value = map.get(key);
             if (value instanceof List) {
                 this.internal.put(key, ((List<Map<String, Object>>) value).stream().map(

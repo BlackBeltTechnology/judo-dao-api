@@ -1,8 +1,8 @@
 package hu.blackbelt.judo.dao.api;
 
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public interface Payload extends Map<String, Object> {
     }
 
     static Payload map(String k1, Object v1) {
-        return asPayload(ImmutableBiMap.of(k1, v1));
+        return asPayload(new HashMap<String, Object>() {{ put(k1, v1); }});
     }
 
     static Payload map(String k1, Object v1, String k2, Object v2) {
@@ -161,6 +161,22 @@ public interface Payload extends Map<String, Object> {
             put(k5, v5); put(k6, v6); put(k7, v7); put(k8, v8); put(k9, v9); put(k10, v10); put(k11, v11); put(k12, v12);
             put(k13, v13); put(k14, v14); put(k15, v15); put(k16, v16); put(k17, v17); put(k18, v18); put(k19, v19);
             put(k20, v20);}});
+    }
+
+    static Entry<String, Object> entry(String key, Object value) {
+        return new AbstractMap.SimpleEntry<>(key, value);
+    }
+
+    @SafeVarargs
+    static Payload map(Entry<String, Object>... entries) {
+        if (entries == null) {
+            return asPayload(null);
+        }
+        Map<String, Object> map = new HashMap<>();
+        for (Entry<String, Object> entry : entries) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return asPayload(map);
     }
 
     Payload getAsPayload(String name);
