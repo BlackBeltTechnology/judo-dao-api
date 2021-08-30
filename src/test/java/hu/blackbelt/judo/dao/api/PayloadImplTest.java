@@ -5,12 +5,18 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PayloadImplTest {
 
@@ -61,6 +67,23 @@ class PayloadImplTest {
         // empty
         Payload emptyPayload = Payload.map();
         assertEquals(0, emptyPayload.size());
+
+        // null
+        Payload nullPayload = Payload.map(null);
+        assertNull(nullPayload);
+
+        // null value
+        Payload nullValuePayload = Payload.map(Payload.entry("k1", null), Payload.entry("k2", null));
+        assertEquals(2, nullValuePayload.size());
+        assertNull(nullValuePayload.getAs(Object.class, "k1"));
+        assertNull(nullValuePayload.getAs(Object.class, "k2"));
+
+        // null key
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class,
+                             () -> Payload.map(Payload.entry(null, "v1"),
+                                               Payload.entry(null, "v2")));
+        assertEquals("Payload contains null key(s)", exception.getMessage());
 
         // 1 item
         Object object = new Object();

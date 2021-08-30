@@ -169,6 +169,9 @@ public interface Payload extends Map<String, Object> {
 
     @SafeVarargs
     static Payload map(Entry<String, Object>... entries) {
+        if (entries == null) {
+            return asPayload(null);
+        }
         Map<String, Object> map = new HashMap<>();
         for (Entry<String, Object> entry : entries) {
             map.put(entry.getKey(), entry.getValue());
