@@ -162,17 +162,11 @@ jobs:
           echo ":warning: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" > build.msg
           echo "Commit: ${{ steps.context.outputs.commitMsg }}" >> build.msg
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: Release ${{ steps.version.outputs.version }}
-          body: |
-              ${{ steps.context.outputs.commitMsg }}
-          draft: true
-          prerelease: false
+      - name: Tag commit
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.version.outputs.version }}
 
       - name: Send message to skype
         uses: Eloco/docker-action-send-skype@v2
