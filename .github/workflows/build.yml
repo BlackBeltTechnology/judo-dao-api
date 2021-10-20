@@ -166,7 +166,7 @@ jobs:
         uses: tvdias/github-tagger@v0.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.version.outputs.version }}
+          tag: v${{ steps.version.outputs.version }}
 
       - name: Send message to skype
         uses: Eloco/docker-action-send-skype@v2
