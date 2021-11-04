@@ -32,6 +32,15 @@ public interface DAO<ID> {
     Payload getStaticData(EAttribute attribute);
 
     /**
+     * Get static data defined as derived expression.
+     *
+     * @param attribute  transfer attribute
+     * @param parameters query parameters
+     * @return value of static data
+     */
+    Payload getParameterizedStaticData(EAttribute attribute, Map<String, Object> parameters);
+
+    /**
      * Get default values of a given transfer object type.
      *
      * @param clazz transfer object type
