@@ -58,11 +58,11 @@ We will be insisting on a minimal reproduction in order to save maintainers' tim
 bugs. We understand that sometimes it might be hard to extract essentials bits of code from a larger codebase, but we
 really need to isolate the problem before we can fix it.
 
-You can file new issues by filling out our [issue form](https://github.com/BlackBeltTechnology/judo-dao-api/issues/new/choose).
+You can file new issues by filling out our https://github.com/BlackBeltTechnology/judo-dao-api/issues/new/choose[issue form].
 
 ### Submitting a PR
 
-This project follows [GitHub's standard forking model](https://guides.github.com/activities/forking/). Please fork the
+This project follows https://guides.github.com/activities/forking/[GitHub's standard forking model]. Please fork the
 project to submit pull requests.
 
 ## Commands
