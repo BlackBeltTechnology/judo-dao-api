@@ -1,87 +1,16 @@
-# judo-tatami
+= judo-dao-api
 
-[[model-processing-pipeline]]
-.Model processing pipeline
-[plantuml, model-processing-pipeline-diagram, alt="Model processing diagram"]
-----
-start
+image::https://github.com/BlackBeltTechnology/judo-dao-api/actions/workflows/build.yml/badge.svg?branch=develop[link="https://github.com/BlackBeltTechnology/judo-dao-api/actions/workflows/build.yml" float="center"]
 
-partition PSM {
-  :judo-meta-psm;
-}
+== Introduction
 
-partition ASM {
-  fork
-    :judo-meta-asm;
-  fork again
-    :judo-meta-measure;
-  fork again
-    while (more unprocessed expression?)
-      :judo-meta-jql;
-    endwhile
-    :judo-meta-jql-extract;
-  end fork
-  :judo-meta-expression;
-}
+The JUDO DAO API is responsible to define operations available on the DAOs usable in our SDK and APIs. It contains
+mostly interfaces, and base classes.
 
-partition LSM {
-  fork
-    while (more dialect?)
-      :judo-meta-rdbms;
-      fork
-        :judo-meta-liquibase;
-      end fork
-    endwhile
-  fork again
-    :judo-meta-openapi;
-  end fork
-}
+== Contributing to the project
 
-stop
-----
+Everyone is welcome to contribute to JUDO! As a starter, please read the corresponding link:CONTRIBUTING.adoc[CONTRIBUTING] guide for details!
 
-[[model-dependencies]]
-.Model dependencies
-[plantuml, model-dependencies-diagram, alt="Model dependencies diagram"]
-----
+== License
 
-package "PSM" {
-  [judo-meta-psm]
-}
-
-package "ASM" {
-  [judo-meta-asm] --> [judo-meta-psm]
-  note right of [judo-meta-asm] : psm2asm
-
-  [judo-meta-measure] --> [judo-meta-psm]
-  note right of [judo-meta-measure] : psm2measure
-
-  [judo-meta-psm-jql] --> [judo-meta-psm]
-  note left of [judo-meta-psm-jql] : psm2jql
-
-  [judo-meta-psm-jql-extract] --> [judo-meta-psm-jql]
-  [judo-meta-psm-jql-extract] --> [judo-meta-psm]
-  note left of [judo-meta-psm-jql-extract] : psm2jql
-
-  [judo-meta-expression] --> [judo-meta-asm]
-  [judo-meta-expression] --> [judo-meta-measure]
-  [judo-meta-expression] --> [judo-meta-psm-jql-extract]
-  note right of [judo-meta-expression] : jql2expression
-
-  [judo-meta-evaluation] --> [judo-meta-expression]
-
-  [judo-meta-query] --> [judo-meta-evaluation]
-}
-
-package "LSM" {
-  [judo-meta-rdbms] --> [judo-meta-asm]
-  note right of [judo-meta-rdbms] : asm2rdbms
-
-  [judo-meta-liquibase] --> [judo-meta-rdbms]
-  note right of [judo-meta-liquibase] : asm2liquibase
-
-  [judo-meta-openapi] --> [judo-meta-asm]
-  note right of [judo-meta-openapi] : asm2openapi
-}
-
-----
+This project is licensed under the https://www.eclipse.org/legal/epl-2.0/[Eclipse Public License - v 2.0].
