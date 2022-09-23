@@ -22,6 +22,7 @@ package hu.blackbelt.judo.dao.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -42,6 +43,19 @@ public class PayloadImpl implements Payload {
 
     public static final Gson GSON = new GsonBuilder().serializeNulls()
             .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>() {
+            /*
+                public static final Gson GSON = new GsonBuilder().serializeNulls()
+            .registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, type, jsonDeserializationContext) -> {
+
+                try{
+                    return ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                } catch (DateTimeParseException e){
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+                }
+
+            })
+
+             */
                 @Override
                 public void write(JsonWriter out, ZonedDateTime value) throws IOException {
                     out.value(value.toString());
