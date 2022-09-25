@@ -1,13 +1,82 @@
 package hu.blackbelt.judo.dao.api;
 
+/*-
+ * #%L
+ * Judo DAO API
+ * %%
+ * Copyright (C) 2018 - 2022 BlackBelt Technology
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Singular;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface DAO<ID> {
+
+    /**
+     * Load static features (attributes and embedded relations) of an unmapped transfer object type.
+     *
+     * @param clazz unmapped transfer object type
+     * @return payload of loaded static data
+     */
+    Payload getStaticFeatures(EClass clazz);
+
+    /**
+     * Get static data defined as derived expression.
+     *
+     * @param attribute transfer attribute
+     * @return value of static data
+     */
+    Payload getStaticData(EAttribute attribute);
+
+    /**
+     * Get static data defined as derived expression.
+     *
+     * @param attribute  transfer attribute
+     * @param parameters query parameters
+     * @return value of static data
+     */
+    Payload getParameterizedStaticData(EAttribute attribute, Map<String, Object> parameters);
+
+    /**
+     * Get default values of a given transfer object type.
+     *
+     * @param clazz transfer object type
+     * @return payload of default values
+     */
+    Payload getDefaultsOf(EClass clazz);
+
+    /**
+     * Get range of a given transfer object relation.
+     *
+     * @param reference       transfer objet relation
+     * @param payload         owner data of relation
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return list of possible item(s)
+     */
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Get all instances of a given mapped transfer object type.
@@ -18,6 +87,17 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getAllOf(EClass clazz);
+
+    /**
+     * Search instances of a given mapped transfer object type.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @returnlist of instances
+     */
+    List<Payload> search(EClass clazz, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -31,6 +111,29 @@ public interface DAO<ID> {
     Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
 
     /**
+     * Get instance of a given mapped transfer object type by the given identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param identifier      mapped transfer object
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return return the optional payload
+     */
+    Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Get (entity) metadata of a given mapped transfer object type by identifier.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz      mapped transfer object type
+     * @param identifier mapped transfer object
+     * @return payload containing metadata (including entity type, version, etc.)
+     */
+    Optional<Payload> getMetadata(EClass clazz, ID identifier);
+
+    /**
      * Get instances of a given mapped transfer object type by the given identifiers.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
@@ -42,27 +145,41 @@ public interface DAO<ID> {
     List<Payload> getByIdentifiers(EClass clazz, Collection<ID> identifiers);
 
     /**
+     * Get instances of a given mapped transfer object type by the given identifiers.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param identifiers     mapped transfer object
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return list of instances
+     */
+    List<Payload> searchByIdentifiers(EClass clazz, Collection<ID> identifiers, QueryCustomizer<ID> queryCustomizer);
+
+    /**
      * Create a new instance of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (create), exposed graphs (ExposedGraph#create) and custom Java sources. Mapped
      * transfer object must have a filter to restrict which kind of instances can be created by exposed services.
      *
-     * @param clazz   mapped transfer object type
-     * @param payload instance to create
+     * @param clazz           mapped transfer object type
+     * @param payload         instance to create
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload create(EClass clazz, Payload payload);
+    Payload create(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object.
      * <p>
      * This operation can be used by JCL (update) and custom Java sources.
      *
-     * @param clazz   mapped transfer object type
-     * @param payload instance to update
+     * @param clazz           mapped transfer object type
+     * @param payload         instance to update
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload update(EClass clazz, Payload payload);
+    Payload update(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object.
@@ -129,16 +246,29 @@ public interface DAO<ID> {
     List<Payload> getAllReferencedInstancesOf(EReference reference, EClass clazz);
 
     /**
+     * Search mapped transfer objects of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#get).
+     *
+     * @param reference       static navigation
+     * @param clazz           mapped transfer object type
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return all instances that are matching a static navigation
+     */
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
+
+    /**
      * Update a mapped transfer object of a given reference (static navigation).
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#update).
      *
-     * @param clazz     mapped transfer object type
-     * @param reference static navigation
-     * @param payload   instance to update
+     * @param clazz           mapped transfer object type
+     * @param reference       static navigation
+     * @param payload         instance to update
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload);
+    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference (static navigation).
@@ -214,28 +344,42 @@ public interface DAO<ID> {
     List<Payload> getNavigationResultAt(ID id, EReference reference);
 
     /**
+     * Search instances of a given reference from a given mapped transfer object.
+     * <p>
+     * This operation can be used by bound operations (TransferObjectRelation#get).
+     *
+     * @param id              ID of source mapped transfer object
+     * @param reference       transfer object reference
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return list of instances
+     */
+    List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
+
+    /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#create).
      *
-     * @param id        mapped transfer object ID in which the new instance will be created
-     * @param reference transfer object relation that the new instance will be linked to
-     * @param payload   instance to create
+     * @param id              mapped transfer object ID in which the new instance will be created
+     * @param reference       transfer object relation that the new instance will be linked to
+     * @param payload         instance to create
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload);
+    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference from a given mapped transfer object.
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#update).
      *
-     * @param id        mapped transfer object ID in which the instance to update can be found
-     * @param reference transfer object relation that the instance to update is linked in (pre condition)
-     * @param payload   instance to update
+     * @param id              mapped transfer object ID in which the instance to update can be found
+     * @param reference       transfer object relation that the instance to update is linked in (pre condition)
+     * @param payload         instance to update
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload);
+    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference from a given mapped transfer object.
@@ -303,38 +447,44 @@ public interface DAO<ID> {
      */
     void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
-    /**
-     * Get range of a given transfer object relation.
-     * <p>
-     * This operation can be used by exposed graphs (ExposedGraph#removeAll).
-     *
-     * @param reference      transfer object relation
-     * @param referenceToSet transfer object relation to set (that the range is returned for)
-     * @param payload        payload of the instance in which the reference is
-     * @return list of instances that can be used by references.
-     */
-    List<Payload> getRangeOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Payload payload);
+    @Getter
+    @Builder
+    class OrderBy {
 
-    /**
-     * Get range of a given transfer object relation.
-     * <p>
-     * This operation can be used by unbound operations (TransferObjectRelation#getRange).
-     *
-     * @param id             mapped transfer object ID in which the instance to update can be found
-     * @param reference      transfer object relation that the instance to edit is linked in (pre condition)
-     * @param referenceToSet reference to set (that the range is returned for)
-     * @param payload        payload of the instance in which the reference is
-     * @return list of instances that can be used by references.
-     */
-    List<Payload> getRangeOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, Payload payload);
+        @NonNull
+        private EAttribute attribute;
 
-    /**
-     * Get template of a given mapped transfer object type.
-     * <p>
-     * This operation can be used by unbound operations (TransferObjectType#getTemplate).
-     *
-     * @param clazz mapped transfer object type
-     * @return template containing default values
-     */
-    Payload getTemplate(EClass clazz);
+        private boolean descending;
+    }
+
+    @Getter
+    @Builder
+    class Seek {
+
+        private int limit;
+
+        private boolean reverse;
+
+        private Payload lastItem;
+    }
+
+    @Getter
+    @Builder
+    class QueryCustomizer<ID> {
+
+        private String filter;
+
+        @Singular("orderBy")
+        private List<OrderBy> orderByList;
+
+        private Seek seek;
+
+        private boolean withoutFeatures;
+
+        private Map<String, Object> mask;
+
+        private Map<String, Object> parameters;
+
+        private Collection<ID> instanceIds;
+    }
 }
