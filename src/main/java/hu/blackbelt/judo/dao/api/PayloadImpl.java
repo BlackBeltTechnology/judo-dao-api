@@ -1,12 +1,28 @@
 package hu.blackbelt.judo.dao.api;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.ImmutableSortedSet;
+/*-
+ * #%L
+ * Judo DAO API
+ * %%
+ * Copyright (C) 2018 - 2022 BlackBelt Technology
+ * %%
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ * 
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the Eclipse
+ * Public License, v. 2.0 are satisfied: GNU General Public License, version 2
+ * with the GNU Classpath Exception which is
+ * available at https://www.gnu.org/software/classpath/license.html.
+ * 
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * #L%
+ */
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -14,7 +30,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +43,19 @@ public class PayloadImpl implements Payload {
 
     public static final Gson GSON = new GsonBuilder().serializeNulls()
             .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>() {
+            /*
+                public static final Gson GSON = new GsonBuilder().serializeNulls()
+            .registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, type, jsonDeserializationContext) -> {
+
+                try{
+                    return ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                } catch (DateTimeParseException e){
+                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+                }
+
+            })
+
+             */
                 @Override
                 public void write(JsonWriter out, ZonedDateTime value) throws IOException {
                     out.value(value.toString());
@@ -41,12 +69,18 @@ public class PayloadImpl implements Payload {
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .create();
+    public static final String TRANSIENT_PREFIX = "__$";
 
     Map<String, Object> internal;
 
     public PayloadImpl(Map<String, Object> map) {
+        for (String key : map.keySet()) {
+            if (key == null) {
+                throw new IllegalArgumentException("Payload contains null key(s)");
+            }
+        }
         this.internal = new TreeMap<>();
-        for (String key : new TreeSet<String>(map.keySet())) {
+        for (String key : new TreeSet<>(map.keySet())) {
             Object value = map.get(key);
             if (value instanceof List) {
                 this.internal.put(key, ((List<Map<String, Object>>) value).stream().map(
@@ -131,12 +165,21 @@ public class PayloadImpl implements Payload {
         if (!(obj instanceof Map)) {
             return false;
         }
-        Map right = (Map) obj;
+        Map right = new TreeMap((Map) obj);
+        Map left = new TreeMap(internal);
 
-        if (!(right instanceof TreeMap)) {
-            right = new TreeMap(right);
-        }
-        return internal.equals(right);
+        // Remove hidden fields
+        ((Set) right.keySet().stream()
+                .filter(k -> k.toString().startsWith(TRANSIENT_PREFIX))
+                .collect(Collectors.toSet()))
+                .forEach(k -> right.remove(k));
+
+        ((Set) left.keySet().stream()
+                .filter(k -> k.toString().startsWith(TRANSIENT_PREFIX))
+                .collect(Collectors.toSet()))
+                .forEach(k -> left.remove(k));
+
+        return left.equals(right);
     }
 
     @Override
