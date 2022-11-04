@@ -463,6 +463,9 @@ public interface DAO<ID> {
 
         private int limit;
 
+        @Builder.Default
+        private int offset = -1;
+
         private boolean reverse;
 
         private Payload lastItem;
