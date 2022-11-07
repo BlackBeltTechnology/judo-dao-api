@@ -79,7 +79,17 @@ public interface DAO<ID> {
     Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
-     * Get all instances of a given mapped transfer object type.
+     * Get range's count of a given transfer object relation.
+     *
+     * @param reference       transfer objet relation
+     * @param payload         owner data of relation
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return number of possible item(s)
+     */
+    long countRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Get instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
@@ -89,15 +99,37 @@ public interface DAO<ID> {
     List<Payload> getAllOf(EClass clazz);
 
     /**
+     * Count instances of a given mapped transfer object type.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz mapped transfer object type
+     * @return number of instances
+     */
+    long countAllOf(EClass clazz);
+
+    /**
      * Search instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (expression) and custom Java sources.
      *
      * @param clazz           mapped transfer object type
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
-     * @returnlist of instances
+     * @return list of instances
      */
     List<Payload> search(EClass clazz, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Count instances of a given mapped transfer object type.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz           mapped transfer object type
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return number of instances
+     */
+    long count(EClass clazz, QueryCustomizer<ID> queryCustomizer);
+
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -235,15 +267,26 @@ public interface DAO<ID> {
     void removeReferences(EReference reference, ID id, Collection<ID> referencedIds);
 
     /**
-     * Get all mapped transfer objects of a given reference (static navigation).
+     * Get mapped transfer objects of a given reference (static navigation).
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#get).
      *
      * @param reference static navigation
      * @param clazz     mapped transfer object type
-     * @return all instances that are matching a static navigation
+     * @return instances that are matching a static navigation
      */
     List<Payload> getAllReferencedInstancesOf(EReference reference, EClass clazz);
+
+    /**
+     * Count mapped transfer objects of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#get).
+     *
+     * @param reference static navigation
+     * @param clazz     mapped transfer object type
+     * @return number of instances that are matching a static navigation
+     */
+    long countAllReferencedInstancesOf(EReference reference, EClass clazz);
 
     /**
      * Search mapped transfer objects of a given reference (static navigation).
@@ -253,9 +296,21 @@ public interface DAO<ID> {
      * @param reference       static navigation
      * @param clazz           mapped transfer object type
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
-     * @return all instances that are matching a static navigation
+     * @return instances that are matching a static navigation
      */
     List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Count mapped transfer objects of a given reference (static navigation).
+     * <p>
+     * This operation can be used by exposed graphs (ExposedGraph#get).
+     *
+     * @param reference       static navigation
+     * @param clazz           mapped transfer object type
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return number of instances that are matching a static navigation
+     */
+    long countReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -307,7 +362,7 @@ public interface DAO<ID> {
     void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId);
 
     /**
-     * Add all references in a mapped transfer object of a given reference of a given reference (static navigation).
+     * Add references in a mapped transfer object of a given reference of a given reference (static navigation).
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#addAll).
      *
@@ -320,7 +375,7 @@ public interface DAO<ID> {
     void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
-     * Remove all references in a mapped transfer object of a given reference of a given reference (static navigation).
+     * Remove references in a mapped transfer object of a given reference of a given reference (static navigation).
      * <p>
      * This operation can be used by exposed graphs (ExposedGraph#removeAll).
      *
@@ -333,7 +388,7 @@ public interface DAO<ID> {
     void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
 
     /**
-     * Get all instances of a given reference from a given mapped transfer object.
+     * Get instances of a given reference from a given mapped transfer object.
      * <p>
      * This operation can be used by bound operations (TransferObjectRelation#get).
      *
@@ -342,6 +397,17 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> getNavigationResultAt(ID id, EReference reference);
+
+    /**
+     * Count instances of a given reference from a given mapped transfer object.
+     * <p>
+     * This operation can be used by bound operations (TransferObjectRelation#get).
+     *
+     * @param id        ID of source mapped transfer object
+     * @param reference transfer object reference
+     * @return number of instances
+     */
+    long countNavigationResultAt(ID id, EReference reference);
 
     /**
      * Search instances of a given reference from a given mapped transfer object.
@@ -354,6 +420,18 @@ public interface DAO<ID> {
      * @return list of instances
      */
     List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Count instances of a given reference from a given mapped transfer object.
+     * <p>
+     * This operation can be used by bound operations (TransferObjectRelation#get).
+     *
+     * @param id              ID of source mapped transfer object
+     * @param reference       transfer object reference
+     * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @return number of instances
+     */
+    long countNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
