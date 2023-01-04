@@ -128,6 +128,7 @@ public class PayloadImpl implements Payload {
         ObjectMapper mapper = JsonMapper.builder()
                 .addModule(new JavaTimeModule())
                 .build();
+
         mapper.getSerializerProvider().setNullKeySerializer(new JacksonNullKeySerializer());
         String jsonResult = null;
         try {
