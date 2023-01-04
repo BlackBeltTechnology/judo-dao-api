@@ -22,6 +22,9 @@ package hu.blackbelt.judo.dao.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +125,9 @@ public class PayloadImpl implements Payload {
     }
 
     public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .build();
         mapper.getSerializerProvider().setNullKeySerializer(new JacksonNullKeySerializer());
         String jsonResult = null;
         try {
