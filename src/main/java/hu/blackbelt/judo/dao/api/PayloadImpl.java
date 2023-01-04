@@ -20,15 +20,8 @@ package hu.blackbelt.judo.dao.api;
  * #L%
  */
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,34 +34,6 @@ import static hu.blackbelt.judo.dao.api.Payload.asPayload;
 
 public class PayloadImpl implements Payload {
 
-    public static final Gson GSON = new GsonBuilder().serializeNulls()
-            .registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>() {
-            /*
-                public static final Gson GSON = new GsonBuilder().serializeNulls()
-            .registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, type, jsonDeserializationContext) -> {
-
-                try{
-                    return ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                } catch (DateTimeParseException e){
-                    return LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
-                }
-
-            })
-
-             */
-                @Override
-                public void write(JsonWriter out, ZonedDateTime value) throws IOException {
-                    out.value(value.toString());
-                }
-
-                @Override
-                public ZonedDateTime read(JsonReader in) throws IOException {
-                    return ZonedDateTime.parse(in.nextString());
-                }
-            })
-            .enableComplexMapKeySerialization()
-            .setPrettyPrinting()
-            .create();
     public static final String TRANSIENT_PREFIX = "__$";
 
     Map<String, Object> internal;
@@ -157,8 +122,18 @@ public class PayloadImpl implements Payload {
     }
 
     public String toString() {
-        return GSON.toJson(internal);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.getSerializerProvider().setNullKeySerializer(new JacksonNullKeySerializer());
+        String jsonResult = null;
+        try {
+            jsonResult = mapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(internal);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonResult;
     }
+
 
     @Override
     public boolean equals(Object obj) {

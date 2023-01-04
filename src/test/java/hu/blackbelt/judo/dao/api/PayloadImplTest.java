@@ -125,4 +125,48 @@ class PayloadImplTest {
         assertEquals(object3, multiPayload.getAs(Object.class, "v3"));
     }
 
+
+    @Test
+    public void testToJson() {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("k1", "string");
+        map.put("null", null);
+        map.put("map", ImmutableMap.of("map2", "map2v", "map1", "map1v"));
+        map.put("collection", ImmutableSet.of(
+                ImmutableMap.of("subcol2_2", "subcolval2_2", "subcol2_1", "subval2_2"),
+                ImmutableMap.of("subcol1_2", "subcolval1_2", "subcol1_1", "subval1_2")
+        ));
+        map.put("list", ImmutableList.of(
+                ImmutableMap.of("sublst2_2", "sublstval2_2", "sublst2_1", "sublst2_2"),
+                ImmutableMap.of("sublst1_2", "sublstval1_2", "sublst1_1", "sublst1_2")
+        ));
+
+        Payload payload = Payload.asPayload(map);
+
+        assertEquals("{\n" +
+                "  \"collection\" : [ {\n" +
+                "    \"subcol2_1\" : \"subval2_2\",\n" +
+                "    \"subcol2_2\" : \"subcolval2_2\"\n" +
+                "  }, {\n" +
+                "    \"subcol1_1\" : \"subval1_2\",\n" +
+                "    \"subcol1_2\" : \"subcolval1_2\"\n" +
+                "  } ],\n" +
+                "  \"k1\" : \"string\",\n" +
+                "  \"list\" : [ {\n" +
+                "    \"sublst2_1\" : \"sublst2_2\",\n" +
+                "    \"sublst2_2\" : \"sublstval2_2\"\n" +
+                "  }, {\n" +
+                "    \"sublst1_1\" : \"sublst1_2\",\n" +
+                "    \"sublst1_2\" : \"sublstval1_2\"\n" +
+                "  } ],\n" +
+                "  \"map\" : {\n" +
+                "    \"map1\" : \"map1v\",\n" +
+                "    \"map2\" : \"map2v\"\n" +
+                "  },\n" +
+                "  \"null\" : null\n" +
+                "}",  payload.toString());
+
+    }
+
 }
