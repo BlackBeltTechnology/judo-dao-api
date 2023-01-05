@@ -58,7 +58,7 @@
         <logback-test-config>${maven.multiModuleProjectDirectory}/logback-test.xml</logback-test-config>
 
         <surefire-version>3.0.0-M7</surefire-version>
-        <jackson-version>2.11.4</jackson-version>
+        <jackson-version>2.14.1</jackson-version>
 
         <!-- Code Quality-->
         <sonar-maven-plugin-version>3.9.1.2184</sonar-maven-plugin-version>
