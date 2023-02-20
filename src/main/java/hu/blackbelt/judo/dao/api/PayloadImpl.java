@@ -25,12 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static hu.blackbelt.judo.dao.api.Payload.asPayload;
@@ -170,35 +165,40 @@ public class PayloadImpl implements Payload {
 
     @Override
     public Payload getAsPayload(String name) {
-        if (!containsKey(name) || get(name) == null) {
+        Object value = get(name);
+        if (!containsKey(name) || value == null) {
             return null;
-        } else if (get(name) instanceof Payload) {
-            return (Payload) get(name);
+        } else if (value instanceof Payload) {
+            return (Payload) value;
         } else {
-            throw new IllegalArgumentException("The payload element in the given key: " + name + " is not a Payload. ");
+            throw new IllegalArgumentException("The payload element with key '" + name + "' is expected to be a payload" +
+                                               " but is a " + value.getClass().getName());
         }
     }
 
     @Override
     public Collection<Payload> getAsCollectionPayload(String name) {
-        if (!containsKey(name) || get(name) == null) {
+        Object value = get(name);
+        if (!containsKey(name) || value == null) {
             return null;
-        } else if (get(name) instanceof Collection) {
-            return (Collection<Payload>) get(name);
+        } else if (value instanceof Collection) {
+            return (Collection<Payload>) value;
         } else {
-            throw new IllegalArgumentException("The payload element in the given key: " + name + " is not a Collection. ");
+            throw new IllegalArgumentException("The payload element with key '" + name + "' is expected to be a payload collection" +
+                                               " but is a " + value.getClass().getName());
         }
     }
 
     @Override
     public <T> T getAs(Class<T> type, String name) {
-        if (!containsKey(name) || get(name) == null) {
+        Object value = get(name);
+        if (!containsKey(name) || value == null) {
             return null;
-        } else if (type.isAssignableFrom(get(name).getClass())) {
-            return (T) get(name);
+        } else if (type.isAssignableFrom(value.getClass())) {
+            return (T) value;
         } else {
-            throw new IllegalArgumentException("The payload element in the given key: " + name + " is not a " + type.getName() +  ". ");
+            throw new IllegalArgumentException("The payload element with key '" + name + "' is expected to be a " + type.getName() +
+                                               " but is a " + value.getClass().getName());
         }
     }
 }
-
