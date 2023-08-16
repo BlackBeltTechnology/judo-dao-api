@@ -57,8 +57,8 @@
         <!--suppress UnresolvedMavenProperty -->
         <logback-test-config>${maven.multiModuleProjectDirectory}/logback-test.xml</logback-test-config>
 
-        <surefire-version>3.0.0-M7</surefire-version>
-        <jackson-version>2.11.4</jackson-version>
+        <surefire-version>3.0.0</surefire-version>
+        <jackson-version>2.15.2</jackson-version>
 
         <!-- Code Quality-->
         <sonar-maven-plugin-version>3.9.1.2184</sonar-maven-plugin-version>
@@ -155,7 +155,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>27.1-jre</version>
+            <version>30.0-jre</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
