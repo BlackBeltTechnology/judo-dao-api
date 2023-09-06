@@ -85,9 +85,10 @@ public interface DAO<ID> {
      * @param reference       transfer objet relation
      * @param payload         owner data of relation
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
+     * @param stateful allow create a new instance or update the existing instance of the 'payload'
      * @return number of possible item(s)
      */
-    long countRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    long countRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful);
 
     /**
      * Get instances of a given mapped transfer object type.
