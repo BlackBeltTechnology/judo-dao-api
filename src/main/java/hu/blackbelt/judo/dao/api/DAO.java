@@ -76,7 +76,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful);
 
     /**
      * Get range's count of a given transfer object relation.
