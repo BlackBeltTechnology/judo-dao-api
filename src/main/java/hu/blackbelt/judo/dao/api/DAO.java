@@ -28,10 +28,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public interface DAO<ID> {
 
@@ -155,6 +152,17 @@ public interface DAO<ID> {
      * @return return the optional payload
      */
     Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer<ID> queryCustomizer);
+
+    /**
+     * Checks whether an instance of a given mapped transfer object type with the given identifier exists.
+     * <p>
+     * This operation can be used by JCL (expression) and custom Java sources.
+     *
+     * @param clazz      mapped transfer object type
+     * @param identifier mapped transfer object
+     * @return returns whether the given instance exists
+     */
+    boolean existsById(EClass clazz, ID identifier);
 
     /**
      * Get (entity) metadata of a given mapped transfer object type by identifier.
