@@ -265,7 +265,7 @@ public interface DAO<ID> {
      * This operation can be used by JCL (delete) and custom Java sources.
      *
      * @param clazz mapped transfer object type
-     * @param id    instances ID to delete
+     * @param id    instance IDs to delete
      */
     void deleteAll(EClass clazz, Iterable<ID> id);
 
