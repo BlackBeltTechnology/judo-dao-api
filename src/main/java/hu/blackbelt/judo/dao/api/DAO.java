@@ -213,7 +213,7 @@ public interface DAO<ID> {
 
 
     /**
-     * Create a new instance of a given mapped transfer object type.
+     * Create a new instance(s) of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (create), exposed graphs (ExposedGraph#create) and custom Java sources. Mapped
      * transfer object must have a filter to restrict which kind of instances can be created by exposed services.
@@ -238,7 +238,7 @@ public interface DAO<ID> {
     Payload update(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
 
     /**
-     * Update a mapped transfer object.
+     * Update mapped transfer object(s).
      * <p>
      * This operation can be used by JCL (update) and custom Java sources.
      *
@@ -260,7 +260,7 @@ public interface DAO<ID> {
     void delete(EClass clazz, ID ids);
 
     /**
-     * Delete a mapped transfer object.
+     * Delete mapped transfer object(s).
      * <p>
      * This operation can be used by JCL (delete) and custom Java sources.
      *
