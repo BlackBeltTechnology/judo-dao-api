@@ -213,7 +213,7 @@ public interface DAO<ID> {
 
 
     /**
-     * Create a new instances of a given mapped transfer object type.
+     * Create new instances of a given mapped transfer object type.
      * <p>
      * This operation can be used by JCL (create), exposed graphs (ExposedGraph#create) and custom Java sources. Mapped
      * transfer object must have a filter to restrict which kind of instances can be created by exposed services.
