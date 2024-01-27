@@ -20,12 +20,7 @@ package hu.blackbelt.judo.dao.api;
  * #L%
  */
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.AbstractMap;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public interface Payload extends Map<String, Object> {
 
@@ -34,7 +29,7 @@ public interface Payload extends Map<String, Object> {
     }
 
     static Payload empty() {
-        return new PayloadImpl(ImmutableMap.of());
+        return new PayloadImpl(Collections.emptyMap());
     }
 
     static Payload map(String k1, Object v1) {
