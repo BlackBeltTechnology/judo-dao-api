@@ -43,7 +43,7 @@ public class PayloadImpl implements Payload {
             }
         }
         this.internal = new TreeMap<>();
-        for (Map.Entry<String, Object> entry : new TreeSet<>(map.entrySet())) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (value instanceof List) {
