@@ -43,8 +43,9 @@ public class PayloadImpl implements Payload {
             }
         }
         this.internal = new TreeMap<>();
-        for (String key : new TreeSet<>(map.keySet())) {
-            Object value = map.get(key);
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof List) {
                 this.internal.put(key, ((List<Map<String, Object>>) value).stream().map(
                         e -> asPayload(e)).collect(Collectors.toList()));
