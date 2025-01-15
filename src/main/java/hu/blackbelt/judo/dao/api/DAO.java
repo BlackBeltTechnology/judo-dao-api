@@ -66,14 +66,14 @@ public interface DAO<ID> {
     Payload getDefaultsOf(EClass clazz);
 
     /**
-     * <p>Populate the default values in the given payload based on the specified transfer object type.</p>
-     * <p>The payload is also populated by traversing through its relations.</p>
+     * <p>Apply the default values in the given payload based on the specified transfer object type.</p>
+     * <p>The default values are also applied by traversing through its relations.</p>
      *
      * @param clazz   transfer object type
      * @param payload payload
-     * @return copy of given payload with populated default values
+     * @return copy of given payload with Applied default values
      */
-    Payload populateDefaultsOf(EClass clazz, Payload payload);
+    Payload applyDefaultsOf(EClass clazz, Payload payload);
 
     /**
      * Get range of a given transfer object relation.
