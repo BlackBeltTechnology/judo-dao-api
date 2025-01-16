@@ -68,12 +68,13 @@ public interface DAO<ID> {
     /**
      * <p>Apply the default values in the given payload based on the specified transfer object type.</p>
      * <p>The default values are also applied by traversing through its relations.</p>
+     * <p>NOTE: additional fields with default values on entity type that are not targeted by a mapping from given transfer object (clazz) mapping,
+     * will not be applied</p>
      *
      * @param clazz   transfer object type
      * @param payload payload
-     * @return copy of given payload with Applied default values
      */
-    Payload applyDefaultsOf(EClass clazz, Payload payload);
+    void applyDefaultsOf(EClass clazz, Payload payload);
 
     /**
      * Get range of a given transfer object relation.
