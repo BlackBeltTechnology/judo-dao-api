@@ -83,9 +83,10 @@ public interface DAO<ID> {
      * @param payload         owner data of relation
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @param stateful        allow create a new instance or update the existing instance of the 'payload'
+     * @param markSelectedRangeItems marking records on the list which are already attacched to reference
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful, boolean markSelectedRangeItems);
 
     /**
      * Get range's count of a given transfer object relation.
