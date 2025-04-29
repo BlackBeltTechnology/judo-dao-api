@@ -28,9 +28,10 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EReference;
 
+import java.io.Serializable;
 import java.util.*;
 
-public interface DAO<ID> {
+public interface DAO {
 
     /**
      * Load static features (attributes and embedded relations) of an unmapped transfer object type.
@@ -86,7 +87,7 @@ public interface DAO<ID> {
      * @param markSelectedRangeItems marking records on the list which are already attacched to reference
      * @return list of possible item(s)
      */
-    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful, boolean markSelectedRangeItems);
+    Collection<Payload> getRangeOf(EReference reference, Payload payload, QueryCustomizer queryCustomizer, boolean stateful, boolean markSelectedRangeItems);
 
     /**
      * Get range's count of a given transfer object relation.
@@ -97,7 +98,7 @@ public interface DAO<ID> {
      * @param stateful        allow create a new instance or update the existing instance of the 'payload'
      * @return number of possible item(s)
      */
-    long countRangeOf(EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer, boolean stateful);
+    long countRangeOf(EReference reference, Payload payload, QueryCustomizer queryCustomizer, boolean stateful);
 
     /**
      * Get instances of a given mapped transfer object type.
@@ -128,7 +129,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> search(EClass clazz, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> search(EClass clazz, QueryCustomizer queryCustomizer);
 
     /**
      * Count instances of a given mapped transfer object type.
@@ -139,7 +140,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return number of instances
      */
-    long count(EClass clazz, QueryCustomizer<ID> queryCustomizer);
+    long count(EClass clazz, QueryCustomizer queryCustomizer);
 
 
     /**
@@ -151,7 +152,7 @@ public interface DAO<ID> {
      * @param identifier mapped transfer object
      * @return return the optional payload
      */
-    Optional<Payload> getByIdentifier(EClass clazz, ID identifier);
+    Optional<Payload> getByIdentifier(EClass clazz, Serializable identifier);
 
     /**
      * Get instance of a given mapped transfer object type by the given identifier.
@@ -163,7 +164,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return return the optional payload
      */
-    Optional<Payload> searchByIdentifier(EClass clazz, ID identifier, QueryCustomizer<ID> queryCustomizer);
+    Optional<Payload> searchByIdentifier(EClass clazz, Serializable identifier, QueryCustomizer queryCustomizer);
 
     /**
      * Checks whether an instance of a given mapped transfer object type with the given identifier exists.
@@ -174,7 +175,7 @@ public interface DAO<ID> {
      * @param identifier mapped transfer object
      * @return returns whether the given instance exists
      */
-    boolean existsById(EClass clazz, ID identifier);
+    boolean existsById(EClass clazz, Serializable identifier);
 
     /**
      * Get (entity) metadata of a given mapped transfer object type by identifier.
@@ -185,7 +186,7 @@ public interface DAO<ID> {
      * @param identifier mapped transfer object
      * @return payload containing metadata (including entity type, version, etc.)
      */
-    Optional<Payload> getMetadata(EClass clazz, ID identifier);
+    Optional<Payload> getMetadata(EClass clazz, Serializable identifier);
 
     /**
      * Get instances of a given mapped transfer object type by the given identifiers.
@@ -196,7 +197,7 @@ public interface DAO<ID> {
      * @param identifiers mapped transfer object
      * @return list of instances
      */
-    List<Payload> getByIdentifiers(EClass clazz, Collection<ID> identifiers);
+    List<Payload> getByIdentifiers(EClass clazz, Collection<Serializable> identifiers);
 
     /**
      * Get instances of a given mapped transfer object type by the given identifiers.
@@ -208,7 +209,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> searchByIdentifiers(EClass clazz, Collection<ID> identifiers, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> searchByIdentifiers(EClass clazz, Collection<Serializable> identifiers, QueryCustomizer queryCustomizer);
 
     /**
      * Create a new instance of a given mapped transfer object type.
@@ -221,7 +222,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload create(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Payload create(EClass clazz, Payload payload, QueryCustomizer queryCustomizer);
 
 
     /**
@@ -235,7 +236,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    List<Payload> createAll(EClass clazz, Iterable<Payload> payloads, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> createAll(EClass clazz, Iterable<Payload> payloads, QueryCustomizer queryCustomizer);
 
     /**
      * Update a mapped transfer object.
@@ -247,7 +248,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload update(EClass clazz, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Payload update(EClass clazz, Payload payload, QueryCustomizer queryCustomizer);
 
     /**
      * Update mapped transfer objects.
@@ -259,7 +260,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    List<Payload> updateAll(EClass clazz, Iterable<Payload> payloads, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> updateAll(EClass clazz, Iterable<Payload> payloads, QueryCustomizer queryCustomizer);
 
     /**
      * Delete a mapped transfer object.
@@ -269,7 +270,7 @@ public interface DAO<ID> {
      * @param clazz mapped transfer object type
      * @param ids    instance ID to delete
      */
-    void delete(EClass clazz, ID ids);
+    void delete(EClass clazz, Serializable ids);
 
     /**
      * Delete mapped transfer objects.
@@ -279,7 +280,7 @@ public interface DAO<ID> {
      * @param clazz mapped transfer object type
      * @param id    instance IDs to delete
      */
-    void deleteAll(EClass clazz, Iterable<ID> id);
+    void deleteAll(EClass clazz, Iterable<Serializable> id);
 
     /**
      * Set references of a given mapped transfer object.
@@ -290,7 +291,7 @@ public interface DAO<ID> {
      * @param id            mapped transfer object (in which the reference to set is)
      * @param referencedIds referenced element IDs (to set), collection must contain only one instance if reference is single.
      */
-    void setReference(EReference reference, ID id, Collection<ID> referencedIds);
+    void setReference(EReference reference, Serializable id, Collection<Serializable> referencedIds);
 
     /**
      * Unset references of a given mapped transfer object.
@@ -300,7 +301,7 @@ public interface DAO<ID> {
      * @param reference transfer object relation, it must not be many
      * @param id        mapped transfer object (in which the reference to unset is)
      */
-    void unsetReference(EReference reference, ID id);
+    void unsetReference(EReference reference, Serializable id);
 
     /**
      * Set references of a given mapped transfer object.
@@ -311,7 +312,7 @@ public interface DAO<ID> {
      * @param id            mapped transfer object (in which the reference to add is)
      * @param referencedIds referenced element IDs (to add)
      */
-    void addReferences(EReference reference, ID id, Collection<ID> referencedIds);
+    void addReferences(EReference reference, Serializable id, Collection<Serializable> referencedIds);
 
     /**
      * Set references of a given mapped transfer object.
@@ -322,7 +323,7 @@ public interface DAO<ID> {
      * @param id            mapped transfer object (in which the reference to remove is)
      * @param referencedIds referenced element IDs (to remove)
      */
-    void removeReferences(EReference reference, ID id, Collection<ID> referencedIds);
+    void removeReferences(EReference reference, Serializable id, Collection<Serializable> referencedIds);
 
     /**
      * Get mapped transfer objects of a given reference (static navigation).
@@ -356,7 +357,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return instances that are matching a static navigation
      */
-    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> searchReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer queryCustomizer);
 
     /**
      * Count mapped transfer objects of a given reference (static navigation).
@@ -368,7 +369,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return number of instances that are matching a static navigation
      */
-    long countReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer<ID> queryCustomizer);
+    long countReferencedInstancesOf(EReference reference, EClass clazz, QueryCustomizer queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference (static navigation).
@@ -381,7 +382,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Payload updateReferencedInstancesOf(EClass clazz, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference (static navigation).
@@ -405,7 +406,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void setReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void setReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     /**
      * Unset reference in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -417,7 +418,7 @@ public interface DAO<ID> {
      * @param instanceId     instance to update
      * @return updated references in the given instance
      */
-    void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId);
+    void unsetReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Serializable instanceId);
 
     /**
      * Add references in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -430,7 +431,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void addAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     /**
      * Remove references in a mapped transfer object of a given reference of a given reference (static navigation).
@@ -443,7 +444,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void removeAllReferencesOfReferencedInstancesOf(EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     /**
      * Get instances of a given reference from a given mapped transfer object.
@@ -454,7 +455,7 @@ public interface DAO<ID> {
      * @param reference transfer object reference
      * @return list of instances
      */
-    List<Payload> getNavigationResultAt(ID id, EReference reference);
+    List<Payload> getNavigationResultAt(Serializable id, EReference reference);
 
     /**
      * Count instances of a given reference from a given mapped transfer object.
@@ -465,7 +466,7 @@ public interface DAO<ID> {
      * @param reference transfer object reference
      * @return number of instances
      */
-    long countNavigationResultAt(ID id, EReference reference);
+    long countNavigationResultAt(Serializable id, EReference reference);
 
     /**
      * Search instances of a given reference from a given mapped transfer object.
@@ -477,7 +478,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return list of instances
      */
-    List<Payload> searchNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
+    List<Payload> searchNavigationResultAt(Serializable id, EReference reference, QueryCustomizer queryCustomizer);
 
     /**
      * Count instances of a given reference from a given mapped transfer object.
@@ -489,7 +490,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return number of instances
      */
-    long countNavigationResultAt(ID id, EReference reference, QueryCustomizer<ID> queryCustomizer);
+    long countNavigationResultAt(Serializable id, EReference reference, QueryCustomizer queryCustomizer);
 
     /**
      * Create a mapped transfer object of a given reference from a given mapped transfer object.
@@ -502,7 +503,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return created instance
      */
-    Payload createNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Payload createNavigationInstanceAt(Serializable id, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
 
     /**
      * Update a mapped transfer object of a given reference from a given mapped transfer object.
@@ -515,7 +516,7 @@ public interface DAO<ID> {
      * @param queryCustomizer query customizer (i.e. filtering, ordering, seeking)
      * @return updated instance
      */
-    Payload updateNavigationInstanceAt(ID id, EReference reference, Payload payload, QueryCustomizer<ID> queryCustomizer);
+    Payload updateNavigationInstanceAt(Serializable id, EReference reference, Payload payload, QueryCustomizer queryCustomizer);
 
     /**
      * Delete a mapped transfer object of a given reference from a given mapped transfer object.
@@ -526,7 +527,7 @@ public interface DAO<ID> {
      * @param reference transfer object relation that the instance to delete is linked in (pre condition)
      * @param payload   instance ID to delete
      */
-    void deleteNavigationInstanceAt(ID id, EReference reference, Payload payload);
+    void deleteNavigationInstanceAt(Serializable id, EReference reference, Payload payload);
 
     /**
      * Set reference in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -540,7 +541,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances (collection is used for single relations too)
      * @return updated references in the given instance
      */
-    void setReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void setReferencesOfNavigationInstanceAt(Serializable id, EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     /**
      * Unset reference in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -553,7 +554,7 @@ public interface DAO<ID> {
      * @param instanceId     instance to update
      * @return updated references in the given instance
      */
-    void unsetReferenceOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId);
+    void unsetReferenceOfNavigationInstanceAt(Serializable id, EReference reference, EReference referenceToSet, Serializable instanceId);
 
     /**
      * Add all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -567,7 +568,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void addAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void addAllReferencesOfNavigationInstanceAt(Serializable id, EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     /**
      * Remove all references in a mapped transfer object of a given reference from a given mapped transfer object.
@@ -581,7 +582,7 @@ public interface DAO<ID> {
      * @param referencedIds  referenced instances
      * @return updated references in the given instance
      */
-    void removeAllReferencesOfNavigationInstanceAt(ID id, EReference reference, EReference referenceToSet, ID instanceId, Collection<ID> referencedIds);
+    void removeAllReferencesOfNavigationInstanceAt(Serializable id, EReference reference, EReference referenceToSet, Serializable instanceId, Collection<Serializable> referencedIds);
 
     @Getter
     @Builder
@@ -609,7 +610,7 @@ public interface DAO<ID> {
 
     @Getter
     @Builder
-    class QueryCustomizer<ID> {
+    class QueryCustomizer {
 
         private String filter;
 
@@ -624,6 +625,6 @@ public interface DAO<ID> {
 
         private Map<String, Object> parameters;
 
-        private Collection<ID> instanceIds;
+        private Collection<Serializable> instanceIds;
     }
 }
