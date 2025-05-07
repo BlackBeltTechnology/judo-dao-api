@@ -20,8 +20,10 @@ package hu.blackbelt.judo.dao.api;
  * #L%
  */
 
-public interface IdentifierProvider<ID> {
-    ID get();
-    Class<ID> getType();
+import java.io.Serializable;
+
+public interface IdentifierProvider {
+    Serializable get();
+    Class<? extends Serializable> getType();
     String getName();
 }
