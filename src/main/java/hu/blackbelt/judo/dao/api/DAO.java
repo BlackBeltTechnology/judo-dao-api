@@ -67,6 +67,15 @@ public interface DAO {
     Payload getDefaultsOf(EClass clazz);
 
     /**
+     * Get default values of a given transfer object type.
+     *
+     * @param clazz transfer object type
+     * @param includeNonEmbeddedAssociations if true, includes default values for association relations that are not embedded in the result payload
+     * @return payload of default values
+     */
+    Payload getDefaultsOf(EClass clazz, boolean includeNonEmbeddedAssociations);
+
+    /**
      * <p>Apply the default values in the given payload based on the specified transfer object type.</p>
      * <p>The default values are also applied by traversing through its relations.</p>
      * <p>NOTE: additional fields with default values on entity type that are not targeted by a mapping from given transfer object (clazz) mapping,
