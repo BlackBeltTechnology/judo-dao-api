@@ -1,0 +1,52 @@
+# JUDO DAO API
+
+> Core Data Access Object interfaces for the JUDO runtime — defines the contract for CRUD, query, navigation, validation, and reference management on EMF-typed transfer objects.
+
+Key facts:
+- Java 21, single-module Maven project with Maven Wrapper (`./mvnw`)
+- Packaged as an OSGi bundle (`hu.blackbelt.judo.dao.api`)
+- Pure API module — interfaces and one lightweight implementation (`PayloadImpl`), no persistence logic
+- All DAO operations accept Eclipse EMF metaclass types (`EClass`, `EReference`, `EAttribute`), not Java classes
+- Key dependencies: Eclipse EMF ECore, Jackson, Lombok, Google Guava
+- Tests: JUnit 5, Mockito, Hamcrest
+- License: Eclipse Public License 2.0 (EPL-2.0)
+
+## Docs
+
+- [README.md](README.md): Project overview, architecture diagram, and build instructions
+- [AGENTS.md](AGENTS.md): Developer guide with build commands, directory structure, technology stack, and coding conventions
+- [CONTRIBUTING.md](CONTRIBUTING.md): How to build, test, and submit pull requests
+- [.github/CIFLOW.md](.github/CIFLOW.md): CI/CD workflow and GitFlow branching strategy
+
+## Core API
+
+- [src/main/java/hu/blackbelt/judo/dao/api/DAO.java](src/main/java/hu/blackbelt/judo/dao/api/DAO.java): Main DAO interface — CRUD, search, count, navigation, reference management. Contains inner classes `OrderBy`, `Seek`, and `QueryCustomizer`
+- [src/main/java/hu/blackbelt/judo/dao/api/Payload.java](src/main/java/hu/blackbelt/judo/dao/api/Payload.java): Data transfer object interface extending `Map<String, Object>` with factory methods and type-safe accessors
+- [src/main/java/hu/blackbelt/judo/dao/api/PayloadImpl.java](src/main/java/hu/blackbelt/judo/dao/api/PayloadImpl.java): TreeMap-based Payload implementation with auto-wrapping of nested maps and JSON serialization via Jackson
+- [src/main/java/hu/blackbelt/judo/dao/api/PayloadValidator.java](src/main/java/hu/blackbelt/judo/dao/api/PayloadValidator.java): Validation interface for payloads, references, and attributes against EMF-typed definitions
+- [src/main/java/hu/blackbelt/judo/dao/api/ValidationResult.java](src/main/java/hu/blackbelt/judo/dao/api/ValidationResult.java): Validation result value class with code, level (ERROR/WARNING), location, and details
+- [src/main/java/hu/blackbelt/judo/dao/api/IdentifierProvider.java](src/main/java/hu/blackbelt/judo/dao/api/IdentifierProvider.java): Pluggable identifier generation interface
+
+## Used by
+
+- [judo-operation-utils](../judo-operation-utils): runtime/judo-operation-utils
+- [judo-platform](../judo-platform): runtime/judo-platform
+- [judo-runtime-core](../judo-runtime-core): runtime/judo-runtime-core
+- [judo-runtime-core-jsl](../judo-runtime-core-jsl): runtime/judo-runtime-core-jsl
+- [judo-sdk-common](../judo-sdk-common): runtime/judo-sdk-common
+- [judo-services](../judo-services): runtime/judo-services
+- [judo-tatami](../judo-tatami): runtime/judo-tatami
+- [judo-tatami-base](../judo-tatami-base): runtime/judo-tatami-base
+- [judo-tatami-jsl](../judo-tatami-jsl): runtime/judo-tatami-jsl
+- [judo-jsl-springboot-parent](../../spring/judo-jsl-springboot-parent): spring/judo-jsl-springboot-parent
+- [judo-jsl-springboot-starter](../../spring/judo-jsl-springboot-starter): spring/judo-jsl-springboot-starter
+- [judo-psm-generator-jaxrs](../../template/judo-psm-generator-jaxrs): template/judo-psm-generator-jaxrs
+- [judo-psm-generator-report](../../template/judo-psm-generator-report): template/judo-psm-generator-report
+- [judo-psm-generator-restassured](../../template/judo-psm-generator-restassured): template/judo-psm-generator-restassured
+- [judo-psm-generator-sdk-core](../../template/judo-psm-generator-sdk-core): template/judo-psm-generator-sdk-core
+
+## Optional
+
+- [pom.xml](pom.xml): Maven build configuration, dependencies, and profiles
+- [.github/workflows/build.yml](.github/workflows/build.yml): Primary CI pipeline (build, test, deploy)
+- [LICENSE.txt](LICENSE.txt): Eclipse Public License 2.0 text
